@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grammar: Messages with Tell & Ask</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:     #C0392B;
+      --red-dark:#96281B;
+      --red-light:#E74C3C;
+      --cream:   #FAF7F2;
+      --dark:    #1A1A1A;
+      --mid:     #444;
+      --soft:    #F0EBE3;
+      --accent:  #F39C12;
+      --informal:#E67E22;
+      --medium:  #C0392B;
+      --formal:  #922B21;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    header {
+      background: var(--red-dark);
+      color: #fff;
+      padding: 60px 40px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: "8";
+      font-family: 'Playfair Display', serif;
+      font-size: 260px;
+      font-weight: 900;
+      position: absolute;
+      right: -20px;
+      top: -40px;
+      opacity: .07;
+      line-height: 1;
+    }
+    header .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    header h1 em { color: var(--accent); font-style: normal; }
+    header .subtitle {
+      font-size: 15px;
+      opacity: .75;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+    .teacher-tag {
+      margin-top: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 13px;
+    }
+    .teacher-tag .dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 50px 24px 80px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--red-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--red-dark), transparent);
+      border-radius: 2px;
+    }
+
+    /* ── INTRO CARD ── */
+    .intro-card {
+      background: #fff;
+      border-left: 5px solid var(--red);
+      border-radius: 12px;
+      padding: 28px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--mid);
+    }
+    .intro-card strong { color: var(--dark); }
+
+    /* ── TWO TYPES ── */
+    .types-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+    @media(max-width:560px){ .types-grid { grid-template-columns: 1fr; } }
+
+    .type-card {
+      border-radius: 14px;
+      padding: 26px 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .type-card.statement { background: var(--red-dark); }
+    .type-card.request   { background: var(--red); }
+    .type-card .icon {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+    .type-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    .type-card p { font-size: 14px; opacity: .85; line-height: 1.55; }
+    .type-card .example {
+      margin-top: 14px;
+      background: rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* ── GOLDEN RULE ── */
+    .golden-rule {
+      background: var(--dark);
+      color: #fff;
+      border-radius: 16px;
+      padding: 30px 32px;
+      margin-bottom: 40px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .golden-rule .label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .rule-item {
+      flex: 1;
+      min-width: 180px;
+    }
+    .rule-item p {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .rule-item p em { color: var(--accent); font-style: normal; font-weight: 700; }
+    .divider-arrow {
+      font-size: 28px;
+      opacity: .3;
+    }
+
+    /* ── FORMALITY TABLE ── */
+    .formality-block {
+      margin-bottom: 40px;
+    }
+    .verb-label {
+      display: inline-block;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: #fff;
+      background: var(--red-dark);
+      padding: 6px 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      margin-bottom: 24px;
+    }
+    thead tr {
+      background: var(--soft);
+    }
+    th {
+      text-align: left;
+      padding: 14px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+    td {
+      padding: 14px 18px;
+      border-top: 1px solid #F0EBE3;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--mid);
+    }
+    td strong { color: var(--dark); }
+    td em { color: var(--mid); font-size: 13px; }
+    tr:hover td { background: #fdf9f5; }
+
+    .chip {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+    .chip.informal { background: #FEF3E2; color: var(--informal); }
+    .chip.medium   { background: #FDEDEC; color: var(--medium); }
+    .chip.formal   { background: #F9EBEA; color: var(--formal); }
+
+    /* ── KEY TRICK ── */
+    .trick-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    }
+    .trick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 18px;
+    }
+    @media(max-width:500px){ .trick-row { grid-template-columns: 1fr; } }
+
+    .trick-card {
+      border-radius: 12px;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .trick-card.tell {
+      background: #FDEDEC;
+      border: 2px solid #E74C3C;
+    }
+    .trick-card.ask {
+      background: #FEF3E2;
+      border: 2px solid var(--accent);
+    }
+    .trick-card .verb {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .trick-card.tell .verb { color: var(--red); }
+    .trick-card.ask .verb  { color: var(--accent); }
+    .trick-card .followed {
+      font-size: 13px;
+      color: var(--mid);
+      margin: 6px 0 10px;
+    }
+    .trick-card .keyword {
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .trick-card.tell .keyword { background: var(--red); color: #fff; }
+    .trick-card.ask .keyword  { background: var(--accent); color: #fff; }
+    .trick-card .eg {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--mid);
+      font-style: italic;
+      background: rgba(0,0,0,.04);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    /* ── EXAMPLES ── */
+    .examples-grid {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+    .ex-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 26px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      border-left: 4px solid var(--red);
+    }
+    .ex-card .situation {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .ex-card .original {
+      font-style: italic;
+      color: var(--mid);
+      font-size: 15px;
+      margin-bottom: 14px;
+      padding-left: 12px;
+      border-left: 3px solid var(--soft);
+    }
+    .ex-card .line {
+      font-size: 14px;
+      color: var(--mid);
+      padding: 5px 0;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .ex-card .line strong { color: var(--dark); }
+
+    /* ── SUMMARY ── */
+    .summary-box {
+      background: var(--red-dark);
+      color: #fff;
+      border-radius: 16px;
+      padding: 36px 32px;
+    }
+    .summary-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+    .summary-steps {
+      display: grid;
+      gap: 16px;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .step .num {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step .text {
+      font-size: 15px;
+      line-height: 1.6;
+      padding-top: 5px;
+      opacity: .9;
+    }
+    .step .text strong { color: #fff; opacity: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 13px;
+      color: #aaa;
+    }
+    footer span { color: var(--red); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="badge">Grammar Focus · Unit 8</div>
+  <h1>Messages with<br><em>Tell</em> & <em>Ask</em></h1>
+  <p class="subtitle">Formal and informal messages — how to pass information and requests in English.</p>
+  <div class="teacher-tag">
+    <div class="dot"></div>
+    <span>Prepared by <strong>Luis Ricardo Santana</strong></span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ══ INTRO ══ -->
+  <p class="section-title">Overview</p>
+  <div class="intro-card">
+    In English, when we want to <strong>pass a message from someone to another person</strong> (like a messenger), we use <strong>tell</strong> or <strong>ask</strong> — depending on the type of message we are delivering.
+  </div>
+
+  <!-- ══ TWO TYPES ══ -->
+  <p class="section-title">The Two Types of Messages</p>
+  <div class="types-grid">
+    <div class="type-card statement">
+      <div class="icon">💬</div>
+      <h3>Statement</h3>
+      <p>You say something or give information to someone else.</p>
+      <div class="example">"I'm going to miss class tonight."</div>
+    </div>
+    <div class="type-card request">
+      <div class="icon">🙏</div>
+      <h3>Request</h3>
+      <p>You ask someone to do something for you.</p>
+      <div class="example">"Could she take a picture of the board?"</div>
+    </div>
+  </div>
+
+  <!-- ══ GOLDEN RULE ══ -->
+  <p class="section-title">The Golden Rule</p>
+  <div class="golden-rule">
+    <div class="rule-item">
+      <div class="label">Statement</div>
+      <p>Use <em>TELL</em><br>to pass information</p>
+    </div>
+    <div class="divider-arrow">⟶</div>
+    <div class="rule-item">
+      <div class="label">Request</div>
+      <p>Use <em>ASK</em><br>to pass a favor or action</p>
+    </div>
+  </div>
+
+  <!-- ══ FORMALITY — TELL ══ -->
+  <p class="section-title">Levels of Formality</p>
+  <div class="formality-block">
+    <div class="verb-label">TELL — Statements</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Structure</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="chip informal">Informal</span></td>
+          <td><strong>(Please) Tell him (that)</strong> + sentence</td>
+          <td><em>(Please) Tell him I'm going to miss class.</em></td>
+        </tr>
+        <tr>
+          <td><span class="chip medium">Medium</span></td>
+          <td><strong>Could you tell him (that)</strong> + sentence</td>
+          <td><em>Could you tell him I'm going to miss class?</em></td>
+        </tr>
+        <tr>
+          <td><span class="chip formal">Formal</span></td>
+          <td><strong>Would you tell him (that)</strong> + sentence</td>
+          <td><em>Would you tell him I'm going to miss class?</em></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- TELL ══ -->
+    <div class="verb-label">ASK — Requests</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Structure</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="chip informal">Informal</span></td>
+          <td><strong>(Please) Ask her to</strong> + verb</td>
+          <td><em>(Please) Ask her to take a picture.</em></td>
+        </tr>
+        <tr>
+          <td><span class="chip medium">Medium</span></td>
+          <td><strong>Could you ask her to</strong> + verb</td>
+          <td><em>Could you ask her to take a picture?</em></td>
+        </tr>
+        <tr>
+          <td><span class="chip formal">Formal</span></td>
+          <td><strong>Would you ask her to</strong> + verb</td>
+          <td><em>Would you ask her to take a picture?</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ KEY TRICK ══ -->
+  <p class="section-title">The Key Trick ⚡</p>
+  <div class="trick-box">
+    <p style="color:var(--mid);font-size:15px;line-height:1.6;">The easiest way to remember which word follows <strong>tell</strong> and <strong>ask</strong>:</p>
+    <div class="trick-row">
+      <div class="trick-card tell">
+        <div class="verb">TELL</div>
+        <div class="followed">is followed by</div>
+        <div class="keyword">that + full sentence</div>
+        <div class="eg">Tell him <u>that</u> she is sick.</div>
+      </div>
+      <div class="trick-card ask">
+        <div class="verb">ASK</div>
+        <div class="followed">is followed by</div>
+        <div class="keyword">to + infinitive</div>
+        <div class="eg">Ask her <u>to</u> call me.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ EXTRA EXAMPLES ══ -->
+  <p class="section-title">Extra Examples</p>
+  <div class="examples-grid">
+
+    <div class="ex-card">
+      <div class="situation">Situation A</div>
+      <div class="original">"I need help with my homework."</div>
+      <div class="line"><span class="chip informal">Informal</span> <span>Ask him <strong>to help</strong> me with my homework.</span></div>
+      <div class="line"><span class="chip medium">Medium</span> <span>Could you ask him <strong>to help</strong> me with my homework?</span></div>
+      <div class="line"><span class="chip formal">Formal</span> <span>Would you ask him <strong>to help</strong> me with my homework?</span></div>
+    </div>
+
+    <div class="ex-card">
+      <div class="situation">Situation B</div>
+      <div class="original">"I'll be late to the meeting."</div>
+      <div class="line"><span class="chip informal">Informal</span> <span>Tell her <strong>that</strong> she'll be late.</span></div>
+      <div class="line"><span class="chip medium">Medium</span> <span>Could you tell her <strong>that</strong> she'll be late?</span></div>
+      <div class="line"><span class="chip formal">Formal</span> <span>Would you tell her <strong>that</strong> she'll be late?</span></div>
+    </div>
+
+  </div>
+
+  <!-- ══ SUMMARY ══ -->
+  <p class="section-title">Summary</p>
+  <div class="summary-box">
+    <h2>🎓 Remember These 3 Rules</h2>
+    <div class="summary-steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="text">Is it <strong>information</strong>? → Use <strong>TELL</strong> + <em>that</em> + full sentence.</div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="text">Is it a <strong>request</strong>? → Use <strong>ASK</strong> + <em>to</em> + infinitive verb.</div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="text">How <strong>formal</strong> is it? → <em>Please</em> (informal) · <em>Could you</em> (medium) · <em>Would you</em> (formal).</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Prepared by <span>Luis Ricardo Santana</span> · Grammar Focus Unit 8 · Messages with Tell &amp; Ask
+</footer>
+
+</body>
+</html>
